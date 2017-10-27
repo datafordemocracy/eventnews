@@ -11,7 +11,7 @@ use the --config command-line option to specify otherwise.
 """
 
 
-USER_AGENT = 'python:com.alicianobles.birthcontrol:v0.0.0 (by /u/aln_aln)'
+USER_AGENT = ''
 
 
 from collections import namedtuple
