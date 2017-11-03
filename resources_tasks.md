@@ -14,3 +14,15 @@
  * Create corpora from these, choose environment (python, R, ?)
  * Feature extraction: should already have reddit source, news source; extract complexity, moral foundations, sentiment, topics or policy?, named entities?, ?
  
+## Dimensions of Cases to Compare
+
+* Policy dimension raised (e.g., immigration, civil rights, health, women's rights)
+* Pre-post Trump era
+* Nature of event as collective action/protest vs. individual action/stimulus
+* Ideological orientation of originating action/stimulus 
+
+## Potential Media Sharing Platforms
+
+* Reddit
+* Facebook (differentiate ideological source)
+* Twitter (probably not much news)
