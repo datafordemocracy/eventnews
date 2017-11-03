@@ -8,9 +8,7 @@ Events include:
  * TBD
  * TBD
  
-News stories shared on https://www.reddit.com/r/alltheleft/ and https://www.reddit.com/r/Conservative/ (or the multi reddit of all left partisan subreddits and all right partisan subreddits, or some subset of these?) are searched for submissions related to one of the selected events. The returned articles will make up the corpora. 
- 
-What elements will be captured? (source, article title/url, ?)
- 
+News stories shared on the the [https://www.reddit.com/r/politics/wiki/relatedsubs](Multi Reddit of all Left/Right partisan subreddits) are searched for submissions related to one of the selected events. The top XX threads are scraped and the thread id, article source, title, and link/url are captured. The returned articles will make up the corpora. 
+  
 In addition, news stories related to the same events will be acquired from establishment news sources (NYT, WSJ?) as a reference point.
  
