@@ -3,7 +3,8 @@
 usage: getPosts.py [-h] --query QUERY
 
 This program accepts a search query and searches political subreddits for urls
-shared by users. Using this url, the program scrapes text data and stores it in a dataframe for further processing
+shared by users. Using this url, the program scrapes text data and stores it in a dataframe
+for further processing
 
 optional arguments:
   -h, --help     show this help message and exit
