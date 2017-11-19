@@ -1,4 +1,19 @@
 # eventnews
+```
+usage: getPosts.py [-h] --query QUERY
+
+This program accepts a search query and searches political subreddits for urls
+shared by users.
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --query QUERY  Input value of query term to be searched
+```
+## Running the Code
+```
+python getPosts.py --query [search term]
+```
+
 Comparing media representations of politically-charged events
 
 The project compares the nature of media representations of politically-charged events shared by liberal and conservative audiences on reddit.
