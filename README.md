@@ -11,6 +11,15 @@ optional arguments:
   --query QUERY  Input value of query term to be searched
 ```
 ## Running the Code
+
+### Required Packages
+* argparse
+* newspaper3k
+* urllib
+* pandas
+* numpy
+* praw
+* collections
 ```
 python getPosts.py --query [search term]
 ```
