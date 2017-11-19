@@ -13,7 +13,7 @@ optional arguments:
 ```
 python getPosts.py --query [search term]
 ```
-
+## About
 Comparing media representations of politically-charged events
 
 The project compares the nature of media representations of politically-charged events shared by liberal and conservative audiences on reddit.
