@@ -16,8 +16,8 @@ from collections import Counter
 from newspaper import Article
 import argparse
 # Reddit Oauth 
-reddit = praw.Reddit(client_id='dQi5JzIyKCSwTA',
-                     client_secret='tdq7gO3xnUj7AGYovlFzyEw7cmk',
+reddit = praw.Reddit(client_id='',
+                     client_secret='',
                      user_agent='Python code to scrape')
 
 '''Having a count variable for counting number of articles being retrieved
