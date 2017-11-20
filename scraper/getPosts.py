@@ -8,16 +8,27 @@ pip3 install urlparse
 pip3 install collections
 pip3 install newspaper3k
 pip3 install argparse
+pip3 install ConfigParser
 '''
 
 import praw
+import configparser
 from urllib.parse import urlparse
 from collections import Counter
 from newspaper import Article
 import argparse
-# Reddit Oauth 
-reddit = praw.Reddit(client_id='',
-                     client_secret='',
+
+#Config Parser
+config = configparser.ConfigParser()
+config.read("praw.ini")
+print(config.sections())
+
+client_id = str(config['app']['client_id'])
+client_secret = str(config['app']['client_secret'])
+
+# Reddit Oauth
+reddit = praw.Reddit(client_id=client_id,
+                     client_secret=client_secret,
                      user_agent='Python code to scrape')
 
 '''Having a count variable for counting number of articles being retrieved

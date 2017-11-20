@@ -20,6 +20,7 @@ optional arguments:
 * numpy
 * praw
 * collections
+* configparser
 ```
 python getPosts.py --query [search term]
 ```
