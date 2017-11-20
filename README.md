@@ -1,7 +1,7 @@
 # eventnews
 
 ### Before running the program
-Enter your client_id and client_secret in the `praw.ini` file without *quotes*.
+The program is written in Python 3x. Install Python3x before running the code. Enter your client_id and client_secret in the `praw.ini` file without *quotes*.
 
 ### Code Description
 ```
@@ -29,7 +29,7 @@ optional arguments:
 
 ## Running the Code
 ```
-python getPosts.py --query [search term]
+python3 getPosts.py --query [search term]
 ```
 ## About
 Comparing media representations of politically-charged events
