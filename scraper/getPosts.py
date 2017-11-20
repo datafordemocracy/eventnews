@@ -17,12 +17,11 @@ from urllib.parse import urlparse
 from collections import Counter
 from newspaper import Article
 import argparse
-
+import csv
+import string
 #Config Parser
 config = configparser.ConfigParser()
 config.read("praw.ini")
-print(config.sections())
-
 client_id = str(config['app']['client_id'])
 client_secret = str(config['app']['client_secret'])
 
@@ -31,13 +30,11 @@ reddit = praw.Reddit(client_id=client_id,
                      client_secret=client_secret,
                      user_agent='Python code to scrape')
 
-'''Having a count variable for counting number of articles being retrieved
 
-nonScrapable keeps the sites that don't give enough information about topic or have been blocked from being scrapped
-'''
-
-
+# nonScrapable keeps the sites that don't give enough information about topic or have been blocked from being scrapped
 nonScrapable = ['twitter.com','youtube.com','i.imgur.com','np.reddit.com','i.redd.it','youtu.be','redd.it','www.facebook.com','www.youtube.com','imgur.com']
+
+
 
 
 def extract_left(query):
@@ -47,27 +44,30 @@ def extract_left(query):
     The search being executed is for the query 'charlottesville' 
     '''
     leftScore=[]
-    countLeft = 0 
+    countLeft = 0
+    left_data=[]
     for submission in reddit.subreddit('CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism').search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
-            print("Score of the submission ",submission.score)  # Output: the submission's score
-            print("Title of the submission ",submission.title)  # Output: the submission's title
-            print("ID of the submission ",submission.id)      # Output: the submission's ID
-            print("URL of the submission ",submission.url)    # Output: the submisson's url
-            print("Domain", source.netloc)  #  Output: the submisson's Domain
+            # print("Score of the submission ",submission.score)  # Output: the submission's score
+            # print("Title of the submission ",submission.title)  # Output: the submission's title
+            # print("ID of the submission ",submission.id)      # Output: the submission's ID
+            # print("URL of the submission ",submission.url)    # Output: the submisson's url
+            # print("Domain", source.netloc)  #  Output: the submisson's Domain
             try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
-                print(article.text)
+                content=article.text
+                content = content.replace(',', ' ')
+                row =[submission.title,submission.score,submission.id,source.netloc,content,"left"]
+                left_data.append(row)
                 leftScore.append(str(source.netloc))
                 countLeft = countLeft+1
             except:
-                print("Website blocked from scraping")
-            print(50*'*')
-    return countLeft,leftScore
+                print("Website blocked from scraping: ",source.netloc)
+    return countLeft,leftScore,left_data
 
 def extract_right(query):
     '''
@@ -77,28 +77,39 @@ def extract_right(query):
     '''
     countRight = 0
     rightScore=[]
+    right_data=[]
     for submission in reddit.subreddit('Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans').search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
-            print("Score of the submission ",submission.score)  # Output: the submission's score
-            print("Title of the submission ",submission.title)  # Output: the submission's title
-            print("ID of the submission ",submission.id)      # Output: the submission's ID
-            print("URL of the submission ",submission.url)    # Output: the submisson's url
-            print("Domain", source.netloc)  #  Output: the submisson's Domain
+            # print("Score of the submission ",submission.score)  # Output: the submission's score
+            # print("Title of the submission ",submission.title)  # Output: the submission's title
+            # print("ID of the submission ",submission.id)      # Output: the submission's ID
+            # print("URL of the submission ",submission.url)    # Output: the submisson's url
+            # print("Domain", source.netloc)  #  Output: the submisson's Domain
             try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
-                print(article.text)
+                # print(article.text)
+                content=article.text
+                content = content.replace(',', ' ')
+                row =[submission.title,submission.score,submission.id,source.netloc,content,"right"]
+                right_data.append(row)
                 rightScore.append(str(source.netloc))
                 countRight = countRight+1
             except:
-                print("Website blocked from scraping")
-            print(50*'*')
-    return countRight,rightScore
+                print("Website blocked from scraping: ",source.netloc)
+    return countRight,rightScore,right_data
 
 
+def write_csv(data):
+    with open('stories.csv', 'w') as outcsv:
+        headers = ['title', 'score', 'ID', 'domain', 'text','party']
+        writer = csv.writer(outcsv,delimiter=',')
+        writer.writerow(headers)
+        for row in data:
+            writer.writerow(row)
 
 if __name__== "__main__":
 # Print the number of articles extracted from each collective subreddits
@@ -107,13 +118,16 @@ if __name__== "__main__":
                         required=True)
     args = parser.parse_args()
     query = args.query
-    countLeft,leftScore = extract_left(query)
-    countRight,rightScore = extract_right(query)
-    print()
+    countLeft,leftScore,leftdata = extract_left(query)
+    countRight,rightScore,rightdata = extract_right(query)
+    print('*'*70)
+    data = leftdata+rightdata
+    print("Writing data into CSV file")
+    write_csv(data)
     print("Number of articles from left: ",countLeft)
     print("Number of articles from right",countRight)
     print()
-
+    print('*'*70)
 # Calculate the number of times each source is referenced in their respective subreddits
 
     left = Counter(leftScore)  # Frequency calculation
@@ -129,3 +143,6 @@ if __name__== "__main__":
     print('{} {: >30s}'.format("Left","Right"))
     for i,j in zip(left,right):
         print('{}: {} , {}: {}'.format(i[0],i[1],j[0],j[1]))
+    print()
+    print('*'*70)
+    print ("Data stored in stories.csv ")
