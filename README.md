@@ -24,6 +24,7 @@ optional arguments:
 * praw
 * collections
 * configparser
+* string
 
 
 ## Running the Code
