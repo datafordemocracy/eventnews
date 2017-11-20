@@ -20,8 +20,7 @@ optional arguments:
 * argparse
 * newspaper3k
 * urllib
-* pandas
-* numpy
+* csv
 * praw
 * collections
 * configparser
