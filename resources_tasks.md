@@ -3,16 +3,14 @@
  * [State of the News Media](http://www.pewresearch.org/topics/state-of-the-news-media/)
  * [Media Cloud](https://mediacloud.org/tools) to find stories? 
  
- ## Steps
- 
- * Choose events as cases: August rallies in Charlottesville
- * Query and scrape shared article urls from reddit - getPosts.py: what attributes are saved?
- * Scrape articles from urls: use [newspaper3k](https://github.com/codelucas/newspaper)
- * Background on reddit: Jessica is circulating material
- * Create corpora from these, choose environment
- * Feature extraction: complexity, moral foundations, sentiment, topics or policy?, named entities?, ?
- 
-## Dimensions of Cases to Compare
+ ## To do
+  * Post stories.csv to box; everyone look to get a sense of types/purpose of posts (consider manual coding possibilities)
+  * Update getPosts.py to add permanent url, post date, up/down votes
+  * Update getPosts.py to grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url)
+  * Read in stories.csv to platform for exploratory analysis (moral foundations, sentiment, topics, entities, liwc features, empath features, other features?); potentially using multiple environments
+ * Consider inclusion of other cases: August rallies in Charlottesville
+
+ ## Dimensions of Cases to Compare
 
 Vary one dimension, and try to hold others approximately constant
 
