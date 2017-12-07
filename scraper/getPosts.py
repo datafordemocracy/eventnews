@@ -50,18 +50,16 @@ def extract_left(query):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
-            # print("Score of the submission ",submission.score)  # Output: the submission's score
-            # print("Title of the submission ",submission.title)  # Output: the submission's title
-            # print("ID of the submission ",submission.id)      # Output: the submission's ID
-            # print("URL of the submission ",submission.url)    # Output: the submisson's url
-            # print("Domain", source.netloc)  #  Output: the submisson's Domain
+            ratio = reddit.submission(submission).upvote_ratio
+            ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
+            downs = ups - submission.score
             try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,submission.id,source.netloc,content,"left"]
+                row =[submission.title,submission.score,ups,downs,submission.id,source.netloc,content,"left"]
                 left_data.append(row)
                 leftScore.append(str(source.netloc))
                 countLeft = countLeft+1
@@ -82,11 +80,9 @@ def extract_right(query):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
-            # print("Score of the submission ",submission.score)  # Output: the submission's score
-            # print("Title of the submission ",submission.title)  # Output: the submission's title
-            # print("ID of the submission ",submission.id)      # Output: the submission's ID
-            # print("URL of the submission ",submission.url)    # Output: the submisson's url
-            # print("Domain", source.netloc)  #  Output: the submisson's Domain
+            ratio = reddit.submission(submission).upvote_ratio
+            ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
+            downs = ups - submission.score
             try:
                 article = Article(url)
                 article.download() # Download the article
@@ -94,7 +90,7 @@ def extract_right(query):
                 # print(article.text)
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,submission.id,source.netloc,content,"right"]
+                row =[submission.title,submission.score,ups,downs,submission.id,source.netloc,content,"right"]
                 right_data.append(row)
                 rightScore.append(str(source.netloc))
                 countRight = countRight+1
@@ -104,8 +100,8 @@ def extract_right(query):
 
 
 def write_csv(data):
-    with open('stories.csv', 'w') as outcsv:
-        headers = ['title', 'score', 'ID', 'domain', 'text','party']
+    with open('stories.csv', 'w', encoding='utf-8') as outcsv:
+        headers = ['title', 'score','upvotes','downvotes', 'ID', 'domain', 'text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
