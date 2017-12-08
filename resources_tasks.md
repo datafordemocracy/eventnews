@@ -9,11 +9,14 @@
   * stories_LIWC.csv and stories_empath.csv are returned results from running the articles through LIWC and Empath
 
 ## To do next
-  * Scan through posted articles/titles to get a sense of types/purpose of posts (consider manual coding possibilities)
-  * License to LIWC (share documentation with lab); get a sense of LIWC via documentation and Empath via article above
+  * Read through/skim backgrounds LIWC, Empath, Moral Foundations to discuss shared understanding potentially relevant dimensions
+  * License to LIWC (share documentation with lab)
+  * Get article suggestion from Jessica for background on moral foundations
   * Add script to run Empath on stories.csv to github
-  * Update getPosts.py to add permanent url, post date and grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url); share example with Gautam
-  * Explore stories.csv in various ways (moral foundations, sentiment, topics, entities, liwc features, empath features, other features?); potentially using multiple environments
+  * Update getPosts.py to add permanent url, post date and grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url); share example for data structure with Gautam
+  * Update getPosts.py to return "Not Scrapable" in text field if not scrapable (these records can be filtered out for analysis when appropriate)
+  * Continue exploring stories.csv in various ways (moral foundations, sentiment, topics, entities, liwc features, empath features, other features?); potentially using multiple environments
+  * Continue scanning through posted articles/titles to get a sense of types/purpose of posts (consider manual coding possibilities)
   * Consider inclusion of other cases: August rallies in Charlottesville
 
  ## Dimensions of Cases to Compare
