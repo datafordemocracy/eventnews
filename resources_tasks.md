@@ -2,6 +2,7 @@
 
  * More on [Empath](https://hci.stanford.edu/publications/2016/ethan/empath-chi-2016.pdf)
  * More on [Moral foundations](http://moralfoundations.org/), from this page, see also The Righteous Mind [Chapter 7](http://righteousmind.com/wp-content/uploads/2013/08/ch07.RighteousMind.final_.pdf)
+ * More on LIWC: [Overview](https://liwc.wpengine.com/interpreting-liwc-output/), [Language Manual](https://liwc.wpengine.com/wp-content/uploads/2015/11/LIWC2015_LanguageManual.pdf)
  * [State of the News Media](http://www.pewresearch.org/topics/state-of-the-news-media/)
   * [Media Cloud](https://mediacloud.org/tools) to find stories? 
  
