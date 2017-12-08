@@ -2,13 +2,19 @@
 
  * [State of the News Media](http://www.pewresearch.org/topics/state-of-the-news-media/)
  * [Media Cloud](https://mediacloud.org/tools) to find stories? 
+ * More on [empath](https://hci.stanford.edu/publications/2016/ethan/empath-chi-2016.pdf)
  
- ## To do
-  * Post stories.csv to box; everyone look to get a sense of types/purpose of posts (consider manual coding possibilities)
-  * Update getPosts.py to add permanent url, post date, up/down votes
-  * Update getPosts.py to grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url)
-  * Read in stories.csv to platform for exploratory analysis (moral foundations, sentiment, topics, entities, liwc features, empath features, other features?); potentially using multiple environments
- * Consider inclusion of other cases: August rallies in Charlottesville
+ ## Where we are
+  * Stories are posted (stories.csv), with character encoding corrected, and up/down votes added
+  * stories_LIWC.csv and stories_empath.csv are returned results from running the articles through LIWC and Empath
+
+## To do next
+  * Scan through posted articles/titles to get a sense of types/purpose of posts (consider manual coding possibilities)
+  * License to LIWC (share documentation with lab); get a sense of LIWC via documentation and Empath via article above
+  * Add script to run Empath on stories.csv to github
+  * Update getPosts.py to add permanent url, post date and grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url); share example with Gautam
+  * Explore stories.csv in various ways (moral foundations, sentiment, topics, entities, liwc features, empath features, other features?); potentially using multiple environments
+  * Consider inclusion of other cases: August rallies in Charlottesville
 
  ## Dimensions of Cases to Compare
 
