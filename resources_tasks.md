@@ -1,8 +1,9 @@
 ## Helpful links
 
+ * More on [Empath](https://hci.stanford.edu/publications/2016/ethan/empath-chi-2016.pdf)
+ * More on [Moral foundations](http://moralfoundations.org/), from this page, see also The Righteous Mind [Chapter 7](http://righteousmind.com/wp-content/uploads/2013/08/ch07.RighteousMind.final_.pdf)
  * [State of the News Media](http://www.pewresearch.org/topics/state-of-the-news-media/)
- * [Media Cloud](https://mediacloud.org/tools) to find stories? 
- * More on [empath](https://hci.stanford.edu/publications/2016/ethan/empath-chi-2016.pdf)
+  * [Media Cloud](https://mediacloud.org/tools) to find stories? 
  
  ## Where we are
   * Stories are posted (stories.csv), with character encoding corrected, and up/down votes added
@@ -11,7 +12,6 @@
 ## To do next
   * Read through/skim backgrounds on features extracted by LIWC, Empath, Moral Foundations to discuss shared understanding potentially relevant dimensions
   * Buy license to LIWC for lab (share documentation in Box)
-  * Get article suggestion from Jessica for background on moral foundations (link or add to Box)
   * Add script to run Empath on stories.csv to github
   * Update getPosts.py to add permanent url, post date and grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url); share example for data structure with Gautam
   * Update getPosts.py to return "Not Scrapable" in text field if not scrapable (these records can be filtered out for analysis when appropriate)
