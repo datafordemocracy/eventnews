@@ -9,9 +9,9 @@
   * stories_LIWC.csv and stories_empath.csv are returned results from running the articles through LIWC and Empath
 
 ## To do next
-  * Read through/skim backgrounds LIWC, Empath, Moral Foundations to discuss shared understanding potentially relevant dimensions
-  * License to LIWC (share documentation with lab)
-  * Get article suggestion from Jessica for background on moral foundations
+  * Read through/skim backgrounds on features extracted by LIWC, Empath, Moral Foundations to discuss shared understanding potentially relevant dimensions
+  * Buy license to LIWC for lab (share documentation in Box)
+  * Get article suggestion from Jessica for background on moral foundations (link or add to Box)
   * Add script to run Empath on stories.csv to github
   * Update getPosts.py to add permanent url, post date and grab comments, comment author, comment score/up votes/down votes, comment date in separate file (matchable to posted stories by permanent url); share example for data structure with Gautam
   * Update getPosts.py to return "Not Scrapable" in text field if not scrapable (these records can be filtered out for analysis when appropriate)
