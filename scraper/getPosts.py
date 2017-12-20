@@ -58,12 +58,16 @@ def extract_left(query):
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
             try:
+                author = submission.author
+            except:
+                author = "removed"
+            try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,reddit_post,source.netloc,time,content,"left"]
+                row =[submission.title,author,submission.score,ups,downs,reddit_post,source.netloc,time,content,"left"]
                 left_data.append(row)
                 leftScore.append(str(source.netloc))
                 countLeft = countLeft+1
@@ -91,13 +95,17 @@ def extract_right(query):
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
             try:
+                author = submission.author
+            except:
+                author = "removed"
+            try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
                 # print(article.text)
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,reddit_post,source.netloc,time,content,"right"]
+                row =[submission.title,author,submission.score,ups,downs,reddit_post,source.netloc,time,content,"right"]
                 right_data.append(row)
                 rightScore.append(str(source.netloc))
                 countRight = countRight+1
@@ -108,7 +116,7 @@ def extract_right(query):
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['title', 'score','upvotes','downvotes', 'reddit post URL', 'domain', 'Time Posted','text','party']
+        headers = ['title','author', 'score','upvotes','downvotes', 'reddit post URL', 'domain', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
