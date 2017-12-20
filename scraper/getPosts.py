@@ -38,7 +38,7 @@ nonScrapable = ['twitter.com','youtube.com','i.imgur.com','np.reddit.com','i.red
 
 
 
-def extract(query,subreddits):
+def extract(query,subreddits,side):
     '''
     Code for all the posts in left subreddits that correspond to a search query
 
@@ -60,25 +60,32 @@ def extract(query,subreddits):
             try:
                 author = submission.author
             except:
-                author = "removed"
+                author = "unknown"
             try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,author,submission.score,ups,downs,reddit_post,source.netloc,time,content,"left"]
+                submission.comment_sort = 'top'
+                comments = submission.comments.list()
+                num_comments = min(5,len(comments))
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,reddit_post,source.netloc,time,content,side]
                 left_data.append(row)
+                for i in comments[0:num_comments]:
+                    comment_created = datetime.datetime.fromtimestamp(i.created).date()
+                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,i.ups,i.downs,"","","",comment_created,i.body,""]
+                    left_data.append(row)
                 leftScore.append(str(source.netloc))
                 countLeft = countLeft+1
             except:
-                print("Website blocked from scraping: ",source.netloc)
+                print("Article not found in webpage or non-downloadable: ",source.netloc)
     return countLeft,leftScore,left_data
 
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['title','author', 'score','upvotes','downvotes', 'reddit post URL', 'domain', 'Time Posted','text','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments', 'permalink', 'domain', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
@@ -93,8 +100,8 @@ if __name__== "__main__":
     query = args.query
     leftParties = 'CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism'
     rightParties = 'Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans'
-    countLeft,leftScore,leftdata = extract(query,leftParties)
-    countRight,rightScore,rightdata = extract(query,rightParties)
+    countLeft,leftScore,leftdata = extract(query,leftParties,'left')
+    countRight,rightScore,rightdata = extract(query,rightParties,'right')
     print('*'*70)
     data = leftdata+rightdata
     print("Writing data into CSV file")
