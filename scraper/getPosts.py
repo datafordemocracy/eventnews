@@ -19,6 +19,7 @@ from newspaper import Article
 import argparse
 import csv
 import string
+import datetime
 #Config Parser
 config = configparser.ConfigParser()
 config.read("praw.ini")
@@ -50,7 +51,10 @@ def extract_left(query):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
+            time = submission.created
+            time = datetime.datetime.fromtimestamp(time).date()
             ratio = reddit.submission(submission).upvote_ratio
+            reddit_post = "www.reddit.com/"+submission.id
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
             try:
@@ -59,7 +63,7 @@ def extract_left(query):
                 article.parse()
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,submission.id,source.netloc,content,"left"]
+                row =[submission.title,submission.score,ups,downs,reddit_post,source.netloc,time,content,"left"]
                 left_data.append(row)
                 leftScore.append(str(source.netloc))
                 countLeft = countLeft+1
@@ -81,6 +85,9 @@ def extract_right(query):
         source = urlparse(url)
         if source.netloc not in nonScrapable:
             ratio = reddit.submission(submission).upvote_ratio
+            time = submission.created
+            time = datetime.datetime.fromtimestamp(time).date()
+            reddit_post = "www.reddit.com/"+submission.id
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
             try:
@@ -90,7 +97,7 @@ def extract_right(query):
                 # print(article.text)
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,submission.id,source.netloc,content,"right"]
+                row =[submission.title,submission.score,ups,downs,reddit_post,source.netloc,time,content,"right"]
                 right_data.append(row)
                 rightScore.append(str(source.netloc))
                 countRight = countRight+1
@@ -101,7 +108,7 @@ def extract_right(query):
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['title', 'score','upvotes','downvotes', 'ID', 'domain', 'text','party']
+        headers = ['title', 'score','upvotes','downvotes', 'reddit post URL', 'domain', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
