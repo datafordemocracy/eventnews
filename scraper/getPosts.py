@@ -38,7 +38,7 @@ nonScrapable = ['twitter.com','youtube.com','i.imgur.com','np.reddit.com','i.red
 
 
 
-def extract_left(query):
+def extract(query,subreddits,side):
     '''
     Code for all the posts in left subreddits that correspond to a search query
 
@@ -47,7 +47,7 @@ def extract_left(query):
     leftScore=[]
     countLeft = 0
     left_data=[]
-    for submission in reddit.subreddit('CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism').search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
+    for submission in reddit.subreddit(subreddits).search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
@@ -58,57 +58,34 @@ def extract_left(query):
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
             try:
+                author = submission.author
+            except:
+                author = "unknown"
+            try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,reddit_post,source.netloc,time,content,"left"]
+                submission.comment_sort = 'top'
+                comments = submission.comments.list()
+                num_comments = min(5,len(comments))
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,reddit_post,source.netloc,time,content,side]
                 left_data.append(row)
+                for i in comments[0:num_comments]:
+                    comment_created = datetime.datetime.fromtimestamp(i.created).date()
+                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,i.ups,i.downs,"","","",comment_created,i.body,""]
+                    left_data.append(row)
                 leftScore.append(str(source.netloc))
                 countLeft = countLeft+1
             except:
-                print("Website blocked from scraping: ",source.netloc)
+                print("Article not found in webpage or non-downloadable: ",source.netloc)
     return countLeft,leftScore,left_data
-
-def extract_right(query):
-    '''
-    Code for all the posts in right subreddits that correspond to a search query
-
-    The search being executed is for the query 'charlottesville'
-    '''
-    countRight = 0
-    rightScore=[]
-    right_data=[]
-    for submission in reddit.subreddit('Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans').search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
-        url = submission.url
-        source = urlparse(url)
-        if source.netloc not in nonScrapable:
-            ratio = reddit.submission(submission).upvote_ratio
-            time = submission.created
-            time = datetime.datetime.fromtimestamp(time).date()
-            reddit_post = "www.reddit.com/"+submission.id
-            ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
-            downs = ups - submission.score
-            try:
-                article = Article(url)
-                article.download() # Download the article
-                article.parse()
-                # print(article.text)
-                content=article.text
-                content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,reddit_post,source.netloc,time,content,"right"]
-                right_data.append(row)
-                rightScore.append(str(source.netloc))
-                countRight = countRight+1
-            except:
-                print("Website blocked from scraping: ",source.netloc)
-    return countRight,rightScore,right_data
 
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['title', 'score','upvotes','downvotes', 'reddit post URL', 'domain', 'Time Posted','text','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments', 'permalink', 'domain', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
@@ -121,8 +98,10 @@ if __name__== "__main__":
                         required=True)
     args = parser.parse_args()
     query = args.query
-    countLeft,leftScore,leftdata = extract_left(query)
-    countRight,rightScore,rightdata = extract_right(query)
+    leftParties = 'CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism'
+    rightParties = 'Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans'
+    countLeft,leftScore,leftdata = extract(query,leftParties,'left')
+    countRight,rightScore,rightdata = extract(query,rightParties,'right')
     print('*'*70)
     data = leftdata+rightdata
     print("Writing data into CSV file")
