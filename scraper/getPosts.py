@@ -44,9 +44,9 @@ def extract(query,subreddits,side):
 
     The search being executed is for the query 'charlottesville' 
     '''
-    leftScore=[]
-    countLeft = 0
-    left_data=[]
+    score=[]
+    count = 0
+    data=[]
     for submission in reddit.subreddit(subreddits).search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
         url = submission.url
         source = urlparse(url)
@@ -68,24 +68,29 @@ def extract(query,subreddits,side):
                 content=article.text
                 content = content.replace(',', ' ')
                 submission.comment_sort = 'top'
-                comments = submission.comments.list()
-                num_comments = min(5,len(comments))
-                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,reddit_post,source.netloc,time,content,side]
-                left_data.append(row)
-                for i in comments[0:num_comments]:
+                total_comments = submission.comments.list()
+                '''
+                submission.num_comments gives you the total number of comments, but users remove their comments from posts which is not captured by num_comments. Its better to list all comments and take the length
+                '''
+                #test_comments = submission.num_comments
+                num_comments = min(5,len(total_comments))
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,time,content,side]
+                data.append(row)
+                for i in total_comments[0:num_comments]:
                     comment_created = datetime.datetime.fromtimestamp(i.created).date()
-                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,i.ups,i.downs,"","","",comment_created,i.body,""]
-                    left_data.append(row)
-                leftScore.append(str(source.netloc))
-                countLeft = countLeft+1
+                    print(i.vars())
+                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,i.ups,i.downs,"","","","",comment_created,i.body,""]
+                    data.append(row)
+                score.append(str(source.netloc))
+                count = count+1
             except:
                 print("Article not found in webpage or non-downloadable: ",source.netloc)
-    return countLeft,leftScore,left_data
+    return count,score,data
 
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments', 'permalink', 'domain', 'Time Posted','text','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
