@@ -1,5 +1,5 @@
 ## Where we are
-  * Stories are posted (stories.csv), with character encoding corrected, up/down votes, top comments, total comments added
+  * Stories are posted (stories_latest.csv) in newspapers/reddit_cville folder, with character encoding corrected, up/down votes, top comments, total comments added
 
 ### Research Questions
 1. On what features do stories posted by right and by left differ, on what features are they similar?
