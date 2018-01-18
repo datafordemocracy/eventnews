@@ -15,8 +15,8 @@
     * LIWC: Alicia
     * Moral foundations: Jessica
     * Distincitive words (tf-idf): Peter
-    * Topics (via topic modeling): 
-    * Named entities?
+    * Topics (via topic modeling): Michele (or Gautam)
+    * Named entities? We didn't talk about this one, but I'll throw it out there (is someone interested?)
   * Look into publishing outlets: everyone    
       
 ## Resources
