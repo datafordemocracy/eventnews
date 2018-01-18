@@ -1,9 +1,17 @@
- ## Where we are
+## Where we are
   * Stories are posted (stories.csv), with character encoding corrected, up/down votes, top comments, total comments added
-  
+
+### Research Questions
+1. On what features do stories posted by right and by left differ, on what features are they similar?
+2. What features of stories promote audience engagement (e.g., more comments)?
+3. What features of stories promote audience perception of quality (e.g., upvotes)?
+4. Are the features that promtoe engagement or quality the same for stories promoted by the right and the left?
+5. Are the features from 3,4,5 those that distinguish stories posted by the left and right or those they have in common?
+6. What else?
+
 ## To do next
   * Gautam" update getPosts.py to add total comments, additional corrections
-  * Begin exploring stories.csv in various ways:
+  * Begin exploring various features (draft, post code; brief group on results):
     * LIWC: Alicia
     * Moral foundations: Jessica
     * Distincitive words (tf-idf): Peter
