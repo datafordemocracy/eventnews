@@ -2,12 +2,13 @@
   * Stories are posted (stories_latest.csv) in newspapers/reddit_cville folder, with character encoding corrected, up/down votes, top comments, total comments added
 
 ### Research Questions
-1. On what features do stories posted by right and by left differ, on what features are they similar?
-2. What features of stories promote audience engagement (e.g., more comments)?
-3. What features of stories promote audience perception of quality (e.g., upvotes)?
-4. Are the features that promtoe engagement or quality the same for stories promoted by the right and the left?
-5. Are the features from 3,4,5 those that distinguish stories posted by the left and right or those they have in common?
-6. What else?
+1. What is the distribution of domains from which stories are pulled on the left and right?
+2. On what features do stories posted by right and by left differ, on what features are they similar?
+3. What features of stories promote audience engagement (e.g., more comments)?
+4. What features of stories promote audience perception of quality (e.g., upvotes)?
+5. Are the features that promtoe engagement or assessment of quality the same for stories promoted by the right and the left?
+6. Are the features from 3,4 (5) those that distinguish stories posted by the left and right or those they have in common (2)?
+7. What else?
 
 ## To do next
   * Gautam" update getPosts.py to add total comments, additional corrections
