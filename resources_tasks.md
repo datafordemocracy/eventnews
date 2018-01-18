@@ -17,6 +17,7 @@
     * Distincitive words (tf-idf): Peter
     * Topics (via topic modeling): 
     * Named entities?
+  * Look into publishing outlets    
       
 ## Resources
  * More on [Empath](https://hci.stanford.edu/publications/2016/ethan/empath-chi-2016.pdf)
