@@ -74,12 +74,11 @@ def extract(query,subreddits,side):
                 '''
                 #test_comments = submission.num_comments
                 num_comments = min(5,len(total_comments))
-                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,time,content,side]
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,url,time,content,side]
                 data.append(row)
                 for i in total_comments[0:num_comments]:
                     comment_created = datetime.datetime.fromtimestamp(i.created).date()
-                    print(i.vars())
-                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,i.ups,i.downs,"","","","",comment_created,i.body,""]
+                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,"N/A","N/A","","","","","",comment_created,i.body,""]
                     data.append(row)
                 score.append(str(source.netloc))
                 count = count+1
@@ -90,7 +89,7 @@ def extract(query,subreddits,side):
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain', 'Time Posted','text','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain','url', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
