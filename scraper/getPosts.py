@@ -42,7 +42,7 @@ def extract(query,subreddits,side):
     '''
     Code for all the posts in left subreddits that correspond to a search query
 
-    The search being executed is for the query 'charlottesville' 
+    The search being executed is for the query charlottesville
     '''
     score=[]
     count = 0
