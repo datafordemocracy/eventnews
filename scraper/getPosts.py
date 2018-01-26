@@ -19,6 +19,7 @@ from newspaper import Article
 import argparse
 import csv
 import string
+import datetime
 #Config Parser
 config = configparser.ConfigParser()
 config.read("praw.ini")
@@ -37,71 +38,58 @@ nonScrapable = ['twitter.com','youtube.com','i.imgur.com','np.reddit.com','i.red
 
 
 
-def extract_left(query):
+def extract(query,subreddits,side):
     '''
     Code for all the posts in left subreddits that correspond to a search query
 
-    The search being executed is for the query 'charlottesville' 
+    The search being executed is for the query charlottesville
     '''
-    leftScore=[]
-    countLeft = 0
-    left_data=[]
-    for submission in reddit.subreddit('CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism').search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
+    score=[]
+    count = 0
+    data=[]
+    for submission in reddit.subreddit(subreddits).search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
+            time = submission.created
+            time = datetime.datetime.fromtimestamp(time).date()
             ratio = reddit.submission(submission).upvote_ratio
+            reddit_post = "www.reddit.com/"+submission.id
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
+            try:
+                author = submission.author
+            except:
+                author = "unknown"
             try:
                 article = Article(url)
                 article.download() # Download the article
                 article.parse()
                 content=article.text
                 content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,submission.id,source.netloc,content,"left"]
-                left_data.append(row)
-                leftScore.append(str(source.netloc))
-                countLeft = countLeft+1
+                submission.comment_sort = 'top'
+                total_comments = submission.comments.list()
+                '''
+                submission.num_comments gives you the total number of comments, but users remove their comments from posts which is not captured by num_comments. Its better to list all comments and take the length
+                '''
+                #test_comments = submission.num_comments
+                num_comments = min(5,len(total_comments))
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,url,time,content,side]
+                data.append(row)
+                for i in total_comments[0:num_comments]:
+                    comment_created = datetime.datetime.fromtimestamp(i.created).date()
+                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,"N/A","N/A","","","","","",comment_created,i.body,""]
+                    data.append(row)
+                score.append(str(source.netloc))
+                count = count+1
             except:
-                print("Website blocked from scraping: ",source.netloc)
-    return countLeft,leftScore,left_data
-
-def extract_right(query):
-    '''
-    Code for all the posts in right subreddits that correspond to a search query
-
-    The search being executed is for the query 'charlottesville'
-    '''
-    countRight = 0
-    rightScore=[]
-    right_data=[]
-    for submission in reddit.subreddit('Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans').search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
-        url = submission.url
-        source = urlparse(url)
-        if source.netloc not in nonScrapable:
-            ratio = reddit.submission(submission).upvote_ratio
-            ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
-            downs = ups - submission.score
-            try:
-                article = Article(url)
-                article.download() # Download the article
-                article.parse()
-                # print(article.text)
-                content=article.text
-                content = content.replace(',', ' ')
-                row =[submission.title,submission.score,ups,downs,submission.id,source.netloc,content,"right"]
-                right_data.append(row)
-                rightScore.append(str(source.netloc))
-                countRight = countRight+1
-            except:
-                print("Website blocked from scraping: ",source.netloc)
-    return countRight,rightScore,right_data
+                print("Article not found in webpage or non-downloadable: ",source.netloc)
+    return count,score,data
 
 
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['title', 'score','upvotes','downvotes', 'ID', 'domain', 'text','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain','url', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
@@ -114,8 +102,10 @@ if __name__== "__main__":
                         required=True)
     args = parser.parse_args()
     query = args.query
-    countLeft,leftScore,leftdata = extract_left(query)
-    countRight,rightScore,rightdata = extract_right(query)
+    leftParties = 'CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism'
+    rightParties = 'Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans'
+    countLeft,leftScore,leftdata = extract(query,leftParties,'left')
+    countRight,rightScore,rightdata = extract(query,rightParties,'right')
     print('*'*70)
     data = leftdata+rightdata
     print("Writing data into CSV file")
