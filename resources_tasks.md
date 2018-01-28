@@ -1,5 +1,6 @@
 ## Where we are
   * Stories are posted (stories_latest.csv) in newspapers/reddit_cville folder, with character encoding corrected, up/down votes, top comments, total comments added
+  * Some initial exploration: tf-idf (storie_tfidi.R), topics (stm_topic.R), LIWC (stories_latest_LIWC.csv and boxplots)
 
 ### Research Questions
 1. What is the distribution of domains from which stories are pulled on the left and right?
@@ -11,14 +12,13 @@
 7. What else?
 
 ## To do next
-  * Gautam" update getPosts.py to add total comments, additional corrections
-  * Begin exploring various features (draft, post code; brief group on results):
-    * LIWC: Alicia
+  * Take a stab at cleaning news stories, comments -- need to agree on some pre-processing for all subsequent analysis
+  * Start exploring story sources, times, authors (e.g., range), scores/votes, comments -- 
+  * More on possible publishing outlets
+  * Can we get total number of comments?
+  * Additional features:
     * Moral foundations: Jessica
-    * Distincitive words (tf-idf): Peter
-    * Topics (via topic modeling): Michele (or Gautam)
     * Named entities? We didn't talk about this one, but I'll throw it out there (is someone interested?)
-  * Look into publishing outlets: everyone    
       
 ## Resources
  * More on [Empath](https://hci.stanford.edu/publications/2016/ethan/empath-chi-2016.pdf)
