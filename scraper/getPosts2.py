@@ -10,14 +10,14 @@ pip install collections
 '''
 
 import praw
-from urllib.parse import urlparse 
+from urllib.parse import urlparse
 from collections import Counter
 
-# Reddit Oauth 
-reddit = praw.Reddit(client_id='_wKH2ofT-zQ9lg',
-                     client_secret='u0PrDtkkcFyH0PS_I985VRZFt-8',
-                     user_agent='mpc8tPraw by /u/mpc8t',
-                     user_name='mpc8t')
+# Reddit Oauth
+reddit = praw.Reddit(client_id='',
+                     client_secret='',
+                     user_agent='',
+                     user_name='')
 
 # Having a count variable for counting number of articles being retrieved
 left_score=[]
@@ -26,12 +26,12 @@ right_score=[]
 '''
 Code for all the posts in left subreddits that correspond to a search query
 
-The search being executed is for the query 'charlottesville' 
+The search being executed is for the query 'charlottesville'
 
 for submission in reddit.subreddit('CornbreadLiberals').search('Charlottesville',limit=10,syntax='cloudsearch',sort='top'):
     urlparse(submission.url)
 '''
-count_left = 0 
+count_left = 0
 for submission in reddit.subreddit('CornbreadLiberals+GreenParty+Liberal+SandersForPresident+SocialDemocracy+alltheleft+clinton+democrats+demsocialist+labor+leftcommunism+leninism+neoprogs+obama+progressive+socialism').search("texas shooting",limit = 5000,syntax='cloudsearch',sort = 'top'):
     url = submission.url
     source = urlparse(url)
@@ -47,9 +47,9 @@ for submission in reddit.subreddit('CornbreadLiberals+GreenParty+Liberal+Sanders
 '''
 Code for all the posts in right subreddits that correspond to a search query
 
-The search being executed is for the query 'charlottesville' 
+The search being executed is for the query 'charlottesville'
 '''
-count = 0 
+count = 0
 for submission in reddit.subreddit('Conservative+NewRight+Objectivism+Republican+Romney+Trueobjectivism+conservatives+monarchism+paleoconservative+republicans').search("texas shooting",limit = 5000,syntax='cloudsearch',sort = 'top'):
     url = submission.url
     source = urlparse(url)
