@@ -1,3 +1,8 @@
+## 2018-02-09
+* Updated reddit_text.R, explored the texts
+* Created reddit_features.R (added features to data frame to start working with)
+* Updated reddit_explore.R
+
 ## 2018-02-02
 * Explored publishing oulets (see email from 1/28)
 * Read through small sample of posted articles to get a better feel
