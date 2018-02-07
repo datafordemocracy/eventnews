@@ -213,13 +213,22 @@ freq_party %>% ggplot(aes(x = reorder(feature, frequency), y = frequency)) +
   theme_minimal()
 
 # Keyness: compare words between target (left) and reference (right) documents
-key <- textstat_keyness(qdfm, docvars(qdfm, 'party') == "left")
+key <- textstat_keyness(qdfm, docvars(qdfm, 'party') == "left", measure = "lr")
 head(key, 20)
 
 textplot_keyness(key) + 
   scale_fill_manual(labels = c("right", "left"), values = c("#CC3333", "#003366"))
 
-# collocations: can call on corpus directoy
+# tf-idf weights
+qdfm_tfidf <- dfm_tfidf(qdfm, scheme_tf = "prop", scheme_df = "inverse")
+textplot_wordcloud(qdfm_tfidf, max.words = 100, scale = c(3,.3))
+
+# by party
+qdfm_party <- dfm_group(qdfm, groups = "party")
+textplot_wordcloud(dfm_tfidf(qdfm_party), comparison = TRUE, 
+                   max.words = 300, scale = c(3, .3))
+
+# collocations: can call on corpus directly
 coll <- textstat_collocations(qcorpus, size = 3, min_count = 50)
 head(coll, 20)
 
