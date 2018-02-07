@@ -84,6 +84,40 @@ names(lc_restricted) <- c("affect", "aff_pos", "aff_net", "neg_anx",
                           "rel_time")
 stories2[,ncol(stories2)+1:31] <- lc_restricted[,1:31]
 
+# Generate percents
+stories2 <- stories2 %>% 
+  mutate(affect=(affect/word_count)*100,
+         aff_pos=(aff_pos/word_count)*100,
+         aff_net=(aff_net/word_count)*100,
+         neg_anx=(neg_anx/word_count)*100,
+         neg_anger=(neg_anger/word_count)*100,
+         neg_sad=(neg_sad/word_count)*100,
+         social=(social/word_count)*100,
+         soc_family=(soc_family/word_count)*100,
+         soc_friends=(soc_friends/word_count)*100,
+         soc_female=(soc_female/word_count)*100,
+         soc_male=(soc_male/word_count)*100,
+         cogproc=(cogproc/word_count)*100,
+         cp_insight=(cp_insight/word_count)*100,
+         cp_cause=(cp_cause/word_count)*100,
+         cp_discrep=(cp_discrep/word_count)*100,
+         cp_tentative=(cp_tentative/word_count)*100,
+         cp_certain=(cp_certain/word_count)*100,
+         cp_differentiate=(cp_differentiate/word_count)*100,
+         drives=(drives/word_count)*100,
+         dr_affil=(dr_affil/word_count)*100,
+         dr_achieve=(dr_achieve/word_count)*100,
+         dr_power=(dr_power/word_count)*100,
+         dr_reward=(dr_reward/word_count)*100,
+         dr_risk=(dr_risk/word_count)*100,
+         time_past=(time_past/word_count)*100,
+         time_present=(time_present/word_count)*100,
+         time_future=(time_future/word_count)*100,
+         relativity=(relativity/word_count)*100,
+         rel_motion=(rel_motion/word_count)*100,
+         rel_space=(rel_space/word_count)*100,
+         rel_time=(rel_time/word_count)*100)
+
 
 ########
 # topics
