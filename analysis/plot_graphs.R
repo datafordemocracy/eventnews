@@ -10,6 +10,7 @@ library(tm)
 library(qgraph)
 library(plotly)
 library(htmlwidgets)
+library(Rgraphviz)
 
 # Transforming the document term matrix into a dataframe:
 dtm.data <- as.data.frame(as.matrix(dtm))

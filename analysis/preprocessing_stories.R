@@ -10,7 +10,7 @@ library(tm)
 library(qgraph)
 library(plotly)
 library(htmlwidgets)
-#library(Rgraphviz)
+library(Rgraphviz)
 
 # Text Mining Example 1:
 
