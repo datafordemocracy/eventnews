@@ -51,7 +51,7 @@ corpus <- tm_map(corpus, content_transformer(removeNumPunct))
 #corpus2 <- tm_map(corpus, stemDocument)
 
 
-# Remove documents with less than 4 words
+# Remove documents with less than 10 words
 corpus2<-corpus[str_count(corpus$content,"\\S+")>10]
 
 # Transforming the corpus object into a document term matrix:
