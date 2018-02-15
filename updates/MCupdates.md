@@ -1,3 +1,7 @@
+## 2018-02-16
+* Organized files to separate projects and reshared folders
+* Read through, and added to the literature folder, some recent work on identifying "fake" or "junk" news sources; we may be able to use this, at least to put into context the domains from which left and right redditors are sharing news
+
 ## 2018-02-09
 * Updated reddit_text.R, explored the texts
 * Created reddit_features.R (added features to data frame to start working with)
