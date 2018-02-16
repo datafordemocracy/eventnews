@@ -1,3 +1,7 @@
+## 2018-02-16
+* Uploaded viz of LIWC vars
+
+
 ## 2018-02-02
 * Reviewed LIWC vars
 * Reviewed communication journals for fit
