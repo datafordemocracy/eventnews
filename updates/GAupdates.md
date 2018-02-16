@@ -1,3 +1,9 @@
+02/16/2018
+
+* Analysing data to find patterns
+* Distribution of domains from which stories are pulled on the left and right
+
+
 12/07/2017
 
 * Minor corrections in code ( utf-8 encoding)
