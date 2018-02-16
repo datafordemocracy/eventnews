@@ -1,5 +1,6 @@
 ## 2018-02-16
 * Uploaded viz of LIWC vars
+* Added paper about domain analysis to Box
 
 
 ## 2018-02-02
