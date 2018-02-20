@@ -1,3 +1,7 @@
+## 2018-02-23
+* Updated reddit_prep.R and reddit_features.R to use stories_latest.csv with total number of comments, and add left/right keyword as feature. The file reddit_features.RData contains all of the variables so far.
+* Added to document, read article on word embeddings
+
 ## 2018-02-16
 * Organized files to separate projects and reshared folders
 * Read through, and added to the literature folder, some recent work on identifying "fake" or "junk" news sources; we may be able to use this, at least to put into context the domains from which left and right redditors are sharing news
