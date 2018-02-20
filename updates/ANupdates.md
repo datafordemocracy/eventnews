@@ -1,3 +1,7 @@
+## 2018-02-23
+* Uploaded viz for moral foundations
+* Tried word embeddings for news stories
+
 ## 2018-02-16
 * Uploaded viz of LIWC vars
 * Added paper about domain analysis to Box
