@@ -10,7 +10,7 @@ pip3 install newspaper3k
 pip3 install argparse
 pip3 install ConfigParser
 '''
-
+# /usr/local/bin/python
 import praw
 import configparser
 from urllib.parse import urlparse
@@ -20,6 +20,7 @@ import argparse
 import csv
 import string
 import datetime
+import pandas as pd
 #Config Parser
 config = configparser.ConfigParser()
 config.read("praw.ini")
@@ -47,6 +48,7 @@ def extract(query,subreddits,side):
     score=[]
     count = 0
     data=[]
+    narayanFake,guessFake,leanList = extract_fakenews()
     for submission in reddit.subreddit(subreddits).search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
         url = submission.url
         source = urlparse(url)
@@ -74,11 +76,33 @@ def extract(query,subreddits,side):
                 '''
                 #test_comments = submission.num_comments
                 num_comments = min(5,len(total_comments))
-                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,url,time,content,side]
+                domain = source.netloc
+                if domain[:3] == 'www':
+                    tempDomain = domain.split('.')[1:]
+                    tempDomain = ".".join(tempDomain)
+                    print (tempDomain)
+                else:
+                    tempDomain = domain
+                    print (tempDomain)
+                for  domain in narayanFake:
+                    if tempDomain in domain:
+                        isnarayanFake = True
+                        break
+                    else:
+                        isnarayanFake = False
+                for  domain in guessFake:
+                    if tempDomain in domain: 
+                        isguessFake = True
+                        Lean = leanList[guessFake.index(tempDomain)]
+                        break
+                    else:
+                        isguessFake = False
+                        Lean = ""
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,isnarayanFake,isguessFake,Lean,url,time,content,side]
                 data.append(row)
                 for i in total_comments[0:num_comments]:
                     comment_created = datetime.datetime.fromtimestamp(i.created).date()
-                    row =[i.id,'comment',i.parent_id,'',i.author,i.score,"N/A","N/A","","","","","",comment_created,i.body,""]
+                    row=[i.id,'comment',i.parent_id,'',i.author,i.score,"N/A","N/A","","","","","","","","",comment_created,i.body,side]
                     data.append(row)
                 score.append(str(source.netloc))
                 count = count+1
@@ -86,17 +110,25 @@ def extract(query,subreddits,side):
                 print("Article not found in webpage or non-downloadable: ",source.netloc)
     return count,score,data
 
-
+def extract_fakenews():
+    xl = pd.ExcelFile('fakenews.xlsx')
+    df1 = xl.parse('Junk news sources')
+    narayanFake = df1['base_url']
+    df2 = pd.read_csv('fake_news2.csv',header='infer')
+    guessFake=df2['Domain']
+    leanList = df2['Lean']
+    return narayanFake,guessFake,leanList
+    
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain','url', 'Time Posted','text','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain','Narayanan Fake News','Guess Fake News','Lean','url', 'Time Posted','text','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
             writer.writerow(row)
 
 if __name__== "__main__":
-# Print the number of articles extracted from each collective subreddits
+#Print the number of articles extracted from each collective subreddits
     parser = argparse.ArgumentParser(description="This program accepts a search query and searches political subreddits for urls shared by users.")
     parser.add_argument('--query', help='Input value of query term to be searched',
                         required=True)
@@ -123,9 +155,6 @@ if __name__== "__main__":
 
     left = left.most_common()  # Most_common sorts the list based on how often they have occured
     right = right.most_common()
-
-    # Print the values in console
-
     print('{} {: >30s}'.format("Left","Right"))
     for i,j in zip(left,right):
         print('{}: {} , {}: {}'.format(i[0],i[1],j[0],j[1]))
