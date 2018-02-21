@@ -11,3 +11,8 @@
 
 ### 12/15/2017
 - Conducted tf-idf analysis of right and left reddit posts regarding Charlottesville (stories), focused on 1) salient and distinctive words utilized by both sides; 2) tf-idf based document similarity, its correlation with political alignment, and network visualization. See stories_tfidf.R for code; can serve as building blocks for future analysis such as moral foundation analysis.
+
+### 2/21/2018
+- Createad features (one theta score for each document) using ideological scaling with wordfish within quanteda; did find decent significance (0.045) for the effect differentiating left from right but interpretation is difficult
+http://pablobarbera.com/ECPR-SC104/html/day3/04-ideological-scaling.html
+https://sites.temple.edu/tudsc/2017/11/09/use-wordfish-for-ideological-scaling/

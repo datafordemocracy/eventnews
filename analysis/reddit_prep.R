@@ -4,7 +4,7 @@
 # Text processing and exploration
 # Jessica or Gautam started this
 # Updated: Michele Claibourn
-# February 2, 2018
+# February 20, 2018
 ###################################
 
 rm(list = ls())
@@ -13,7 +13,7 @@ library(tm)
 library(wordcloud)
 
 # Set working directory
-setwd("~/Box Sync/mpc/dataForDemocracy/newspaper/reddit_cville/")
+setwd("/Users/mpc8t/Box Sync/mpc/dataForDemocracy/eventnewsshared/reddit_cville/Data/")
 
 # Read in stories (reading in with read_csv, it handles the dates better)
 threads <- read_csv("stories_latest.csv")
@@ -24,14 +24,26 @@ str(threads)
 stories <- threads %>% filter(type=="submission")
 
 
+###########################
+## Remove non-stories
+###########################
+# Remove rows with fewer than 6 words in the text field
+# break up the strings in each row by " "
+stories$temp <- strsplit(stories$text, split=" ")
+stories$wordcount <- sapply(stories$temp, length)
+summary(stories$wordcount)
+ggplot(stories, aes(x=wordcount)) + geom_histogram()
+stories2 <- stories %>% filter(wordcount>5) %>% select(-one_of("temp"))
+
+
 ######################
 ## Processing with TM
 ######################
 # Creating a corpus object via the vector source function:
-corpus <- Corpus(VectorSource(stories$text))
+corpus <- Corpus(VectorSource(stories2$text))
 
 # Assign metadata
-meta(corpus, "party") <- stories$party
+meta(corpus, "party") <- stories2$party
 
 # Applying transformations to the corpora:
 corpus <- tm_map(corpus, tolower) # every character lower case
@@ -114,8 +126,8 @@ commonality.cloud(dtm_sum, max.words=100, scale=c(3,.3),
 
 # Discriminating words via tf.idf
 # Put all words from left in one vector, all words from right in another
-leftvec <- paste0(stories$text[1:190], collapse = " ")
-rightvec <- paste0(stories$text[191:389], collapse = " ")
+leftvec <- paste0(stories2$text[1:190], collapse = " ")
+rightvec <- paste0(stories2$text[191:389], collapse = " ")
 corpus_party <- Corpus(VectorSource(c(leftvec, rightvec)))
 
 # Process this corpus
@@ -150,15 +162,6 @@ save.image("reddit_text.RData")
 # load("reddit_text.RData")
 
 
-# Remove rows with fewer than 6 words in the text field
-# break up the strings in each row by " "
-stories$temp <- strsplit(stories$text, split=" ")
-stories$wordcount <- sapply(stories$temp, length)
-summary(stories$wordcount)
-ggplot(stories, aes(x=wordcount)) + geom_histogram()
-stories2 <- stories %>% filter(wordcount>5) %>% select(-one_of("temp"))
-
-
 ###########################
 ## Processing with Quanteda
 ###########################
@@ -180,12 +183,12 @@ docvars(qcorpus, "days") <- stories2$days
 texts(qcorpus)[1]
 
 # Make a document-feature matrix
-qdfm <- dfm(qcorpus,  tolower = TRUE,
-            remove = stopwords("english"), remove_punct = TRUE,
-            remove_numbers = TRUE, remove_symbols = TRUE,
-            remove_url = TRUE, remove_hyphens = TRUE,
-            stem = TRUE, verbose = TRUE)
-qdfm
+qdfm<- dfm(qcorpus,  tolower = TRUE,
+                 remove = stopwords("english"), remove_punct = TRUE,
+                 remove_numbers = TRUE, remove_symbols = TRUE,
+                 remove_url = TRUE, remove_hyphens = TRUE,
+                 stem = TRUE, verbose = TRUE)
+qdfm # 372 dos, 9,424 features, 97.3% sparse
 
 
 ######################################
@@ -219,6 +222,17 @@ head(key, 20)
 textplot_keyness(key) + 
   scale_fill_manual(labels = c("right", "left"), values = c("#CC3333", "#003366"))
 
+# save left/right key words to vectors
+rightkey <- key %>% 
+  arrange(G2) %>% 
+  select(feature, G2) %>% 
+  slice(1:10)
+
+leftkey <- key %>% 
+  arrange(desc(G2)) %>% 
+  select(feature, G2) %>% 
+  slice(1:10)
+
 # tf-idf weights
 qdfm_tfidf <- dfm_tfidf(qdfm, scheme_tf = "prop", scheme_df = "inverse")
 textplot_wordcloud(qdfm_tfidf, max.words = 100, scale = c(3,.3))
@@ -226,7 +240,7 @@ textplot_wordcloud(qdfm_tfidf, max.words = 100, scale = c(3,.3))
 # by party
 qdfm_party <- dfm_group(qdfm, groups = "party")
 textplot_wordcloud(dfm_tfidf(qdfm_party), comparison = TRUE, 
-                   max.words = 300, scale = c(3, .3))
+                   max.words = 100, scale = c(3, .3))
 
 # collocations: can call on corpus directly
 coll <- textstat_collocations(qcorpus, size = 3, min_count = 50)
@@ -242,7 +256,7 @@ textplot_scale1d(wf, margin = "features",
 # qdfm_trim <- dfm_trim(qdfm, min_count = 3, max_docfreq = 370, verbose = TRUE)
 # qdfm_trim
 
-rm(wf, coll, key, p, eventdate, leftvec, rightvec, lFreq, rFreq, removeURL, removeNumPunct,
+rm(wf, coll, p, eventdate, leftvec, rightvec, lFreq, rFreq, removeURL, removeNumPunct,
    right, rdtm, rdtm_sum, left, ldtm, ldtm_sum, dtm_party, dtm_party_df, dtm_sum)
 save.image("reddit_text.RData")
 # load("reddit_text.RData")
