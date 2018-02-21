@@ -14,3 +14,5 @@
 
 ### 2/21/2018
 - Createad features (one theta score for each document) using ideological scaling with wordfish within quanteda; did find decent significance (0.045) for the effect differentiating left from right but interpretation is difficult
+http://pablobarbera.com/ECPR-SC104/html/day3/04-ideological-scaling.html
+https://sites.temple.edu/tudsc/2017/11/09/use-wordfish-for-ideological-scaling/
