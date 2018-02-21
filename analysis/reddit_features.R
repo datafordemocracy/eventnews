@@ -255,3 +255,19 @@ save.image("reddit_features.RData")
 # named entities?
 # ideological scaling?
 #######################
+
+#####################
+# ideological scaling
+#####################
+scorpus <- corpus(stories2$text)
+docnames(scorpus) <- stories2$id
+sdfm <- dfm(scorpus, remove = stopwords("english"), remove_punct = TRUE, verbose=TRUE)
+sdfm <- dfm_trim(sdfm, min_docfreq = 5, max_docfreq = 370)
+
+# running wordfish
+wf <- textmodel_wordfish(sdfm, dir=c(1, 372)) # dir specifies two "example" documents representing different ideologies
+wf
+
+# does theta scores differentiate left vs right? 
+t.test(wf@theta[1:186], wf@theta[187:372], alternative = "greater") 
+
