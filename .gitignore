@@ -1,3 +1,4 @@
 scraper/praw.ini
 stories.csv
 **/.DS_Store
+.Rproj.user
