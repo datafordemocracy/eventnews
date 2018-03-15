@@ -1,3 +1,7 @@
+02/23/2018
+
+* Added two news columns to the stories.csv file for finding fake news and to which side they are leaning towards ie:) pro-trump, pro-hillary
+
 02/16/2018
 
 * Analysing data to find patterns

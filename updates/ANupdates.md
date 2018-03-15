@@ -1,3 +1,7 @@
+## 2018-03-16
+* Uploaded thoughts from reading the data
+* Make suggestions for further cleaning the data
+
 ## 2018-02-23
 * Uploaded viz for moral foundations
 * Tried word embeddings for news stories

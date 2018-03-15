@@ -1,6 +1,6 @@
 ## 2018-02-23
 * Updated reddit_prep.R and reddit_features.R to use stories_latest.csv with total number of comments, and add left/right keyword as feature. The file reddit_features.RData contains all of the variables so far.
-* Added to document, read article on word embeddings
+* Added to document, read article on word embeddings; played with word embeddings using text2vec and read more
 
 ## 2018-02-16
 * Organized files to separate projects and reshared folders
