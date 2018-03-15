@@ -25,6 +25,8 @@ optional arguments:
 * collections
 * configparser
 * string
+* textblob
+* datetime
 
 
 ## Running the Code
