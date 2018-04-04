@@ -20,6 +20,7 @@ import argparse
 import csv
 import string
 import datetime
+import json
 import pandas as pd
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
@@ -58,7 +59,10 @@ def extract(query,subreddits,side):
             time = submission.created
             time = datetime.datetime.fromtimestamp(time).date()
             ratio = reddit.submission(submission).upvote_ratio
-            reddit_post = "www.reddit.com/"+submission.id
+            reddit_post = "www.reddit.com/"+submission.permalink
+            subreddit = submission.subreddit
+            subredditName = subreddit.display_name
+            subredditSubs = subreddit.subscribers
             ups = round((ratio*submission.score)/(2*ratio - 1)) if ratio != 0.5 else round(submission.score/2)
             downs = ups - submission.score
             try:
@@ -92,21 +96,13 @@ def extract(query,subreddits,side):
                         break
                     else:
                         isnarayanFake = False
-                for  domain in guessFake:
-                    if tempDomain in domain: 
-                        isguessFake = True
-                        Lean = leanList[guessFake.index(tempDomain)]
-                        break
-                    else:
-                        isguessFake = False
-                        Lean = ""
                 sentiment = TextBlob(content)
                 polarity_pattern = sentiment.sentiment.polarity
                 sentiment_pattern = 'Positive' if polarity_pattern >0 else 'Negative'
                 sentiment_nltk = TextBlob(content,analyzer=NaiveBayesAnalyzer())
                 polarity_nltk = sentiment_nltk.sentiment.p_pos
                 sentiment_nltk = 'Positive' if polarity_nltk >0.5 else 'Negative'
-                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),reddit_post,source.netloc,isnarayanFake,isguessFake,Lean,url,time,content,polarity_pattern,sentiment_pattern,polarity_nltk,sentiment_nltk,side]
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),subredditName,subredditSubs,reddit_post,source.netloc,isnarayanFake,url,time,content,polarity_pattern,sentiment_pattern,polarity_nltk,sentiment_nltk,side]
                 data.append(row)
                 for i in total_comments[0:num_comments]:
                     comment_created = datetime.datetime.fromtimestamp(i.created).date()
@@ -136,7 +132,7 @@ def extract_fakenews():
     
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments', 'permalink', 'domain','Narayanan Fake News','Guess Fake News','Lean','url', 'Time Posted','text','pattern analyser polarity','pattern analyser sentiment','naive bayes polarity','naive bayes sentiment','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments','subreddit name','subreddit subscribers', 'permalink', 'domain','Narayanan Fake News','url', 'Time Posted','text','pattern analyser polarity','pattern analyser sentiment','naive bayes polarity','naive bayes sentiment','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
