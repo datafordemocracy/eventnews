@@ -24,11 +24,14 @@ import json
 import pandas as pd
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
-#Config Parser
+import spacy
+# Config Parser
 config = configparser.ConfigParser()
 config.read("praw.ini")
 client_id = str(config['app']['client_id'])
 client_secret = str(config['app']['client_secret'])
+# Load parser
+nlp = spacy.load('en')
 
 # Reddit Oauth
 reddit = praw.Reddit(client_id=client_id,
@@ -51,8 +54,13 @@ def extract(query,subreddits,side):
     score=[]
     count = 0
     data=[]
-    narayanFake,guessFake,leanList = extract_fakenews()
+    narayanFake = extract_fakenews()
     for submission in reddit.subreddit(subreddits).search(query,limit = 5000,syntax='cloudsearch',sort = 'top'):
+        named_entities = {}
+        columns = ['PERSON','NORP','FACILITY','ORG','GPE','LOC','PRODUCT','EVENT','WORK_OF_ART','LAW','LANGUAGE','DATE','TIME','PERCENT','MONEY','QUANTITY','ORDINAL','CARDINAL']
+        # Initialzize empty dictionary
+        for i in columns:
+            named_entities[i]=[]
         url = submission.url
         source = urlparse(url)
         if source.netloc not in nonScrapable:
@@ -97,12 +105,18 @@ def extract(query,subreddits,side):
                     else:
                         isnarayanFake = False
                 sentiment = TextBlob(content)
+                parsedText = nlp(content)
+                for entities in parsedText.ents:
+                    entity_name = str(entities).strip()
+                    if(entity_name==''):
+                        continue
+                    named_entities[entities.label_].append(entity_name)
                 polarity_pattern = sentiment.sentiment.polarity
                 sentiment_pattern = 'Positive' if polarity_pattern >0 else 'Negative'
                 sentiment_nltk = TextBlob(content,analyzer=NaiveBayesAnalyzer())
                 polarity_nltk = sentiment_nltk.sentiment.p_pos
                 sentiment_nltk = 'Positive' if polarity_nltk >0.5 else 'Negative'
-                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),subredditName,subredditSubs,reddit_post,source.netloc,isnarayanFake,url,time,content,polarity_pattern,sentiment_pattern,polarity_nltk,sentiment_nltk,side]
+                row =[submission.id,'submission',submission.id,submission.title,author,submission.score,ups,downs,num_comments,len(total_comments),subredditName,subredditSubs,reddit_post,source.netloc,isnarayanFake,url,time,content,named_entities['PERSON'],named_entities['NORP'],named_entities['FACILITY'],named_entities['ORG'],named_entities['GPE'],named_entities['LOC'],named_entities['PRODUCT'],named_entities['EVENT'],named_entities['WORK_OF_ART'],named_entities['LAW'],named_entities['LANGUAGE'],named_entities['DATE'],named_entities['TIME'],named_entities['PERCENT'],named_entities['MONEY'],named_entities['QUANTITY'],named_entities['ORDINAL'],named_entities['CARDINAL'],polarity_pattern,sentiment_pattern,polarity_nltk,sentiment_nltk,side]
                 data.append(row)
                 for i in total_comments[0:num_comments]:
                     comment_created = datetime.datetime.fromtimestamp(i.created).date()
@@ -112,7 +126,7 @@ def extract(query,subreddits,side):
                     sentiment_nltk = TextBlob(i.body,analyzer=NaiveBayesAnalyzer())
                     polarity_nltk = sentiment_nltk.sentiment.p_pos
                     sentiment_nltk = 'Positive' if polarity_nltk >0.5 else 'Negative'
-                    row=[i.id,'comment',i.parent_id,'',i.author,i.score,"N/A","N/A","","","","","","","","",comment_created,i.body,polarity_pattern,sentiment_pattern,polarity_nltk,sentiment_nltk,side]
+                    row=[i.id,'comment',i.parent_id,'',i.author,i.score,"N/A","N/A","","","","","","","","",comment_created,i.body,"","","","","","","","","","","","","","","","","","",polarity_pattern,sentiment_pattern,polarity_nltk,sentiment_nltk,side]
                     data.append(row)
                 score.append(str(source.netloc))
                 count = count+1
@@ -124,15 +138,11 @@ def extract_fakenews():
     xl = pd.ExcelFile('fakenews.xlsx')
     df1 = xl.parse('Junk news sources')
     narayanFake = df1['base_url']
-    df2 = pd.read_csv('fake_news2.csv',header='infer')
-    guessFake=df2['Domain']
-    print(guessFake)
-    leanList = df2['Lean']
-    return narayanFake,guessFake,leanList
+    return narayanFake
     
 def write_csv(data):
     with open('stories.csv', 'w', encoding='utf-8') as outcsv:
-        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments','subreddit name','subreddit subscribers', 'permalink', 'domain','Narayanan Fake News','url', 'Time Posted','text','pattern analyser polarity','pattern analyser sentiment','naive bayes polarity','naive bayes sentiment','party']
+        headers = ['id','type','parent_id','title','author', 'score','upvotes','downvotes','num_comments','total comments','subreddit name','subreddit subscribers', 'permalink', 'domain','Narayanan Fake News','url', 'Time Posted','text','PERSON','NORP','FACILITY','ORG','GPE','LOC','PRODUCT','EVENT','WORK_OF_ART','LAW','LANGUAGE','DATE','TIME','PERCENT','MONEY','QUANTITY','ORDINAL','CARDINAL','pattern analyser polarity','pattern analyser sentiment','naive bayes polarity','naive bayes sentiment','party']
         writer = csv.writer(outcsv,delimiter=',')
         writer.writerow(headers)
         for row in data:
